@@ -147,7 +147,12 @@ void ATestRPGCharacter::Look(const FInputActionValue& Value)
 
 void ATestRPGCharacter::ApplyDash(const FInputActionValue& Value)
 {
-	if (this->GetVelocity().Z != 0 || !IsAbilityAccessed)
+	if (this->GetVelocity().Z != 0)
+	{
+		return;
+	}
+
+	if (!IsAbilityAccessed)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Ability is cooldown!"));
 		return;
@@ -157,6 +162,7 @@ void ATestRPGCharacter::ApplyDash(const FInputActionValue& Value)
 	{
 		GetCapsuleComponent()->SetCollisionProfileName("Pawn");
 		AbilitySystemComponent->TryActivateAbilityByClass(DashAbility);
+		ApplyCoolDown();
 	}
 
 	IsAbilityAccessed = false;
@@ -168,7 +174,6 @@ void ATestRPGCharacter::CancelDash(const FInputActionValue& Value)
 	{
 		GetCapsuleComponent()->SetCollisionProfileName("BlockAllDynamic");
 		AbilitySystemComponent->CancelAbility(DashAbility.GetDefaultObject());
-		ApplyCoolDown();
 	}
 }
 
