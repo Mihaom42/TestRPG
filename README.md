@@ -1,3 +1,3 @@
 # TestRPG
 
-To activate your ability push SHIFT button
+To activate dash ability push SHIFT button
