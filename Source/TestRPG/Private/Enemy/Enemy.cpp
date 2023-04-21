@@ -195,7 +195,7 @@ void AEnemy::ApplyDeadState()
 	}
 
 	StunnedTimerDelegate.BindUFunction(this, FName("ApplyDestroy"));
-	World->GetTimerManager().SetTimer(StunnedTimerHandle, StunnedTimerDelegate, 1.0f, false, 5.0f);
+	World->GetTimerManager().SetTimer(StunnedTimerHandle, StunnedTimerDelegate, 1.0f, false, 2.5f);
 
 	EnemyCondition->UpdateEnemyState(*EnemyStates.Find(EEnemyState::Dead));
 }

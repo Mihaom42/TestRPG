@@ -58,7 +58,7 @@ ATestRPGCharacter::ATestRPGCharacter()
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 
-	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATestRPGCharacter::OnDashApply);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ATestRPGCharacter::OnOverlap);
 
 	IsAbilityAccessed = true;
 }
@@ -154,7 +154,7 @@ void ATestRPGCharacter::ApplyDash(const FInputActionValue& Value)
 
 	if (!IsAbilityAccessed)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Ability is cooldown!"));
+		GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Red, FString("Ability is cooldown!"));
 		return;
 	}
 
@@ -172,12 +172,11 @@ void ATestRPGCharacter::CancelDash(const FInputActionValue& Value)
 {
 	if (AbilitySystemComponent)
 	{
-		GetCapsuleComponent()->SetCollisionProfileName("BlockAllDynamic");
 		AbilitySystemComponent->CancelAbility(DashAbility.GetDefaultObject());
 	}
 }
 
-void ATestRPGCharacter::OnDashApply(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
+void ATestRPGCharacter::OnOverlap(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (IDamageableInterface* DamageableObject = Cast<IDamageableInterface>(OtherActor))
@@ -189,6 +188,8 @@ void ATestRPGCharacter::OnDashApply(class UPrimitiveComponent* OverlappedComp, c
 		
 		PushEnemy(OtherActor);
 	}
+
+	GetCapsuleComponent()->SetCollisionProfileName("BlockAllDynamic");;
 }
 
 void ATestRPGCharacter::PushEnemy(AActor* OtherActor)
@@ -205,6 +206,6 @@ void ATestRPGCharacter::ApplyCoolDown()
 
 void ATestRPGCharacter::ActivateAbility()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString("Ability has activated!"));
+	GEngine->AddOnScreenDebugMessage(-1, 2.5f, FColor::Red, FString("Ability is active!"));
 	IsAbilityAccessed = true;
 }
